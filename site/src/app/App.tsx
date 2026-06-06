@@ -1,23 +1,24 @@
 import { Bell, Heart, CheckCircle, Video, UserCheck } from 'lucide-react';
+import blackLogo from '../imports/Black_And_White_Minimalist_Typography_Personal_Logo-3.png';
 
 export default function App() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+      <header style={{ background: 'linear-gradient(135deg, #6d28d9, #a78bfa)' }} className="sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="/src/imports/WhatsApp_Image_2026-05-14_at_10.45.27.jpeg"
+              src={blackLogo}
               alt="V-Angels Logo"
               className="h-12 w-auto"
             />
-            <span className="font-bold text-xl text-gray-900">V-Angels</span>
+            <span className="font-bold text-xl text-white">V-Angels</span>
           </div>
           <nav className="hidden md:flex gap-8">
-            <a href="#recursos" className="text-gray-600 hover:text-blue-600 transition">Recursos</a>
-            <a href="#como-funciona" className="text-gray-600 hover:text-blue-600 transition">Como Funciona</a>
-            <a href="#beneficios" className="text-gray-600 hover:text-blue-600 transition">Benefícios</a>
+            <a href="#recursos" className="text-white/90 hover:text-white transition">Recursos</a>
+            <a href="#como-funciona" className="text-white/90 hover:text-white transition">Como Funciona</a>
+            <a href="#beneficios" className="text-white/90 hover:text-white transition">Benefícios</a>
           </nav>
         </div>
       </header>
@@ -270,7 +271,7 @@ export default function App() {
           <div className="mb-8 flex flex-col items-center text-center">
             <div className="flex items-center gap-3 mb-4">
               <img
-                src="/src/imports/WhatsApp_Image_2026-05-14_at_10.45.27.jpeg"
+                src={blackLogo}
                 alt="V-Angels Logo"
                 className="h-10 w-auto"
               />
