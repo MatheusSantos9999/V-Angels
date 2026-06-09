@@ -5,20 +5,20 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header style={{ background: 'linear-gradient(135deg, #6d28d9, #a78bfa)' }} className="sticky top-0 z-50">
+      <header className="sticky top-0 z-50 shadow-md" style={{ background: 'linear-gradient(135deg, #1098F7 0%, #0D7FD4 60%, #0A6EC0 100%)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src={blackLogo}
               alt="V-Angels Logo"
-              className="h-12 w-auto"
+              className="h-12 w-auto brightness-0 invert"
             />
             <span className="font-bold text-xl text-white">V-Angels</span>
           </div>
           <nav className="hidden md:flex gap-8">
-            <a href="#recursos" className="text-white/90 hover:text-white transition">Recursos</a>
-            <a href="#como-funciona" className="text-white/90 hover:text-white transition">Como Funciona</a>
-            <a href="#beneficios" className="text-white/90 hover:text-white transition">Benefícios</a>
+            <a href="#recursos" className="text-white/80 hover:text-white transition font-medium">Recursos</a>
+            <a href="#como-funciona" className="text-white/80 hover:text-white transition font-medium">Como Funciona</a>
+            <a href="#beneficios" className="text-white/80 hover:text-white transition font-medium">Benefícios</a>
           </nav>
         </div>
       </header>
@@ -57,7 +57,7 @@ export default function App() {
           <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video">
             <iframe
               className="w-full h-full"
-              src="https://www.youtube.com/embed/pAL5nc4b9EQ"
+              src="https://www.youtube.com/embed/Or2OivSA-lE"
               title="V-Angels - Sistema de Segurança"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -226,7 +226,7 @@ export default function App() {
       </section>
 
       {/* Benefícios Section */}
-      <section id="beneficios" className="py-20 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+      <section id="beneficios" className="py-20 text-white" style={{ background: '#111111' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -237,7 +237,7 @@ export default function App() {
             </p>
           </div>
           <div className="max-w-2xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl">
+            <div className="p-8 rounded-xl border border-white/10" style={{ background: '#1A1A1A' }}>
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
                 <Heart className="w-8 h-8" />
                 Benefícios do Sistema
