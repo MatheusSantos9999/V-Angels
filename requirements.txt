@@ -1,0 +1,15 @@
+# Dependências do Raspberry Pi / máquina de captura (captura.py)
+requests
+
+# Dependências do servidor AWS EC2 (server_aws.py)
+flask
+ultralytics
+opencv-python-headless
+numpy
+twilio
+
+# Instalação:
+# pip install -r requirements.txt
+#
+# Dependência externa (instalar via apt no Linux):
+# sudo apt install -y ffmpeg

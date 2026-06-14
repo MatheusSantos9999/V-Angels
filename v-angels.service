@@ -1,0 +1,24 @@
+# Serviço systemd para execução automática no Raspberry Pi
+# Instalar em: /etc/systemd/system/v-angels.service
+#
+# Comandos:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable v-angels.service
+#   sudo systemctl start v-angels.service
+#   journalctl -u v-angels.service -f  (ver logs)
+
+[Unit]
+Description=V-Angels Captura
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=<USUARIO_DO_PI>
+WorkingDirectory=/home/<USUARIO_DO_PI>
+ExecStart=/usr/bin/python3 /home/<USUARIO_DO_PI>/captura.py
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

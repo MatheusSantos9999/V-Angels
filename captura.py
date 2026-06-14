@@ -8,25 +8,37 @@ import concurrent.futures
 import json
 
 # ── Configurações ──────────────────────────────────────────────────────────────
-AWS_URL    = "http://18.216.234.123:5000/upload_frames"
-RTSP_USER  = "yphp"
-RTSP_PASS  = "e4ettw"
-RTSP_PORT  = 554
-RTSP_PATH  = "/onvif1"
-API_KEY    = "teste123"
-INTERVALO  = 15
-IP_CACHE   = "camera_ip.json"
+# Endereço do servidor Flask na nuvem (AWS EC2)
+AWS_URL   = "http://<IP_DO_SERVIDOR>:5000/upload_frames"
+
+# Credenciais da câmera IP (protocolo RTSP)
+RTSP_USER = "<USUARIO_CAMERA>"
+RTSP_PASS = "<SENHA_CAMERA>"
+RTSP_PORT = 554          # Porta padrão RTSP
+RTSP_PATH = "/onvif1"    # Caminho do stream da câmera
+
+# Chave de autenticação da API
+API_KEY   = "<API_KEY>"
+
+# Intervalo entre capturas (segundos)
+INTERVALO = 15
+
+# Arquivo de cache para o IP da câmera
+IP_CACHE  = "camera_ip.json"
 
 # ── Descoberta de IP ───────────────────────────────────────────────────────────
 
 def rtsp_url(ip):
+    """Monta a URL RTSP completa para conexão com a câmera."""
     return f"rtsp://{RTSP_USER}:{RTSP_PASS}@{ip}:{RTSP_PORT}{RTSP_PATH}"
 
 def salvar_ip(ip):
+    """Salva o IP da câmera em cache para evitar nova varredura."""
     with open(IP_CACHE, "w") as f:
         json.dump({"ip": ip}, f)
 
 def carregar_ip():
+    """Carrega o IP da câmera do cache."""
     try:
         with open(IP_CACHE) as f:
             return json.load(f).get("ip")
@@ -34,6 +46,7 @@ def carregar_ip():
         return None
 
 def porta_aberta(ip):
+    """Verifica se a porta RTSP está aberta em um IP."""
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(0.5)
@@ -44,6 +57,7 @@ def porta_aberta(ip):
         return False
 
 def get_subnet():
+    """Descobre a sub-rede local automaticamente."""
     try:
         resultado = subprocess.run(["ip", "route"], capture_output=True, text=True, timeout=5)
         for linha in resultado.stdout.splitlines():
@@ -65,6 +79,7 @@ def get_subnet():
         return None
 
 def varrer_rede():
+    """Varre a rede local em busca de dispositivos com porta 554 aberta."""
     subnet = get_subnet()
     if not subnet:
         return []
@@ -80,6 +95,7 @@ def varrer_rede():
     return encontrados
 
 def descobrir_camera():
+    """Descobre o IP da câmera — tenta o cache primeiro, depois varre a rede."""
     ip = carregar_ip()
     if ip and porta_aberta(ip):
         print(f"Câmera no IP salvo: {ip}")
@@ -98,16 +114,17 @@ def descobrir_camera():
 # ── Captura e envio ────────────────────────────────────────────────────────────
 
 def capturar_frame(ip):
+    """Captura um frame do stream RTSP usando FFmpeg."""
     if os.path.exists("frame.jpg"):
         os.remove("frame.jpg")
 
     subprocess.run(
         [
             "ffmpeg",
-            "-i", rtsp_url(ip),      # UDP — mais rápido nessa câmera
+            "-i", rtsp_url(ip),
             "-an",
             "-frames:v", "1",
-            "-pix_fmt", "yuvj420p",  # corrige formato de cor do encoder Android
+            "-pix_fmt", "yuvj420p",  # Corrige formato de cor do encoder da câmera
             "-q:v", "5",
             "-update", "1",
             "-y", "frame.jpg"
@@ -127,6 +144,7 @@ def capturar_frame(ip):
     return True, tamanho
 
 def enviar_frame():
+    """Envia o frame capturado para o servidor Flask na nuvem via HTTP POST."""
     with open("frame.jpg", "rb") as f:
         img = f.read()
     resp = requests.post(
@@ -144,6 +162,7 @@ falhas    = 0
 
 while True:
     try:
+        # Descobre o IP da câmera se ainda não tiver
         if ip_camera is None:
             ip_camera = descobrir_camera()
 
@@ -152,6 +171,7 @@ while True:
             time.sleep(30)
             continue
 
+        # Captura o frame
         print(f"Capturando frame ({ip_camera})...")
         ok, info = capturar_frame(ip_camera)
 
@@ -165,6 +185,7 @@ while True:
             time.sleep(INTERVALO)
             continue
 
+        # Envia para o servidor
         print(f"Frame: {info} bytes — enviando...")
         resposta = enviar_frame()
         print("Resposta:", resposta)
